@@ -1,0 +1,63 @@
+$ export VERSION=latest
+
+$ cd ~/nextcloud
+$ mkdir -p ~/podman/nextcloud
+$ mkdir -p ./$VERSION/original ./$VERSION/test
+$ podman run -d -p 8080:80 -v ~/podman/nextcloud:/var/www/html --name nextcloud docker.io/library/nextcloud:$VERSION
+
+http://macmini:8080/
+
+=> create admin user: admin:admin
+
+$ sudo cp -R ~/podman/nextcloud/config/config.php ./$VERSION/
+$ sudo cp -R ~/podman/nextcloud/data/ ./$VERSION/original/
+$ sudo chown -R kenny: ./$VERSION/
+
+$ mv ./$VERSION/original/data/* ./$VERSION/original/
+$ rm -rf ./$VERSION/original/data/
+$ rm ./$VERSION/original/*
+$ rmdir ./$VERSION/original/admin/cache/
+$ rm -rf ./$VERSION/original/appdata_*
+$ rm -rf ./$VERSION/original/files_external/
+$ mkdir ./$VERSION/original/admin/files/e2e/
+$ mv ./$VERSION/original/admin/files/* ./$VERSION/original/admin/files/e2e/
+
+http://macmini:8080/settings/apps/featured/end_to_end_encryption
+
+=> download and install End-to-End Encryption plugin
+
+=> locally: install Nextcloud client: https://github.com/nextcloud-releases/desktop/releases/download/v$CLIENT_VERSION/Nextcloud-$CLIENT_VERSION.pkg
+=> locally: connect client to Nextcloud instance
+=> locally: synchronize all files
+=> locally: enable End-to-End encryption
+=> locally: note down End-to-End encryption mnemonic
+=> locally: create folder "e2e"
+=> locally: enable End-to-End encryption for folder "e2e"
+=> locally: move all default files into folder "e2e"
+=> locally: force synchronization of all files
+
+$ sudo cp -R ~/podman/nextcloud/data/ ./$VERSION/test/
+$ sudo chown -R kenny: ./$VERSION/
+
+$ mv ./$VERSION/test/data/* ./$VERSION/test/
+$ rm -rf ./$VERSION/test/data/
+$ rm ./$VERSION/test/*
+$ rmdir ./$VERSION/test/admin/cache/
+$ rm -rf ./$VERSION/test/files_external/
+$ rm -rf ./$VERSION/test/appdata_*/appstore
+$ rm -rf ./$VERSION/test/appdata_*/avatar
+$ rm -rf ./$VERSION/test/appdata_*/identityproof
+$ rm -rf ./$VERSION/test/appdata_*/js
+$ rm -rf ./$VERSION/test/appdata_*/preview
+$ rm -rf ./$VERSION/test/appdata_*/text
+$ rm -rf ./$VERSION/test/appdata_*/theming
+$ rmdir ./$VERSION/test/appdata_*/end_to_end_encryption/tokens
+
+$ podman stop nextcloud && podman rm nextcloud
+$ sudo rm -rf ~/podman/nextcloud/
+
+=> locally: disconnect client from Nextcloud instance
+=> locally: remove account from client
+=> locally: delete sync folder
+=> locally: delete all "Nextcloud" entries from macOS Keychain
+
