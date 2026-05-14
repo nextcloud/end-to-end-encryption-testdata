@@ -2,6 +2,7 @@
 /.gitattributes export-ignore
 /.github        export-ignore
 /.gitignore     export-ignore
+/AGENTS.md      export-ignore
 
 # handle certain files as binary
 /*/** binary
