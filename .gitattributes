@@ -1,0 +1,8 @@
+# do not export certain files
+/.gitattributes export-ignore
+/.github        export-ignore
+/.gitignore     export-ignore
+
+# handle certain files as binary
+/*/** binary
+
